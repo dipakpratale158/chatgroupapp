@@ -26,6 +26,8 @@ function login() {
       alert(result.data.message);
       localStorage.setItem("token", result.data.token);
       window.location.href = "/";
+      window.location.href = "/homePage";
+
     })
     .catch((error) => {
       if (error.response) {
