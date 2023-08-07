@@ -50,6 +50,36 @@ const postUserSignUp = async (req, res, next) => {
         }
       })
       .catch((err) => console.log(err));
+
+
+      const existingUser = await User.findOne({
+        where: {
+          [Op.or]: [{ email }, { number }],
+        },
+      });
+  
+      if (existingUser) {
+        res
+          .status(409)
+          .send(
+            `<script>alert('This email or number is already taken. Please choose another one.'); window.location.href='/'</script>`
+          );
+      } else {
+        bcrypt.hash(password, 10, async (err, hash) => {
+          await User.create({
+            name: name,
+            email: email,
+            number: number,
+            password: hash,
+          });
+        });
+        res
+          .status(200)
+          .send(
+            `<script>alert('User Created Successfully!'); window.location.href='/'</script>`
+          );
+      }
+
   } catch (error) {
     console.log(error);
   }
